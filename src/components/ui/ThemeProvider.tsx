@@ -32,8 +32,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("zocial-theme", theme);
   }, [theme]);
 
-  const toggleTheme = () =>
+  const toggleTheme = () => {
+    const root = document.documentElement;
+    root.classList.add("theme-transitioning");
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    setTimeout(() => root.classList.remove("theme-transitioning"), 300);
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
