@@ -17,6 +17,10 @@ export default function SetupProfile() {
 
   const checkUsername = async (value: string) => {
     if (!value) { setUsernameError(null); return; }
+    if (!/^[a-z0-9_.]{3,30}$/.test(value.toLowerCase())) {
+      setUsernameError("3–30 chars: letters, numbers, _ and . only");
+      return;
+    }
     const { data } = await supabase
       .from("profiles")
       .select("username")
@@ -51,7 +55,22 @@ export default function SetupProfile() {
       <h1 className="text-xl font-bold text-text-primary mb-1">Set Up Profile</h1>
       <p className="text-sm text-text-muted mb-6">Create your Zocial identity</p>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {/* Avatar placeholder — upload enabled in a future phase */}
+      <div className="flex justify-center mb-6">
+        <div
+          title="Avatar upload coming soon"
+          className="relative w-20 h-20 rounded-full bg-bg-surface border-2 border-dashed border-border flex items-center justify-center cursor-pointer group hover:border-accent transition-colors"
+        >
+          <span className="text-2xl text-text-muted group-hover:text-accent transition-colors select-none">
+            +
+          </span>
+          <span className="absolute -bottom-5 text-xs text-text-muted whitespace-nowrap">
+            Add photo (soon)
+          </span>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
         <Input
           label="Username"
           type="text"
@@ -60,7 +79,7 @@ export default function SetupProfile() {
           value={username}
           onChange={(e) => { setUsername(e.target.value); checkUsername(e.target.value); }}
           placeholder="johndoe"
-          hint="This is how others will find you"
+          hint="How others will find and add you"
           error={usernameError ?? undefined}
           required
         />
