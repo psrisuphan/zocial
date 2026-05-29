@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Zocial",
-  description: "A privacy-first PWA chat app for Gen Z",
+  description: "A clean, privacy-first chat app for everyone.",
   manifest: "/manifest.json",
 };
 

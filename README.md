@@ -1,6 +1,6 @@
 # Zocial
 
-A privacy-first PWA chat app for Gen Z. End-to-end encrypted DMs, group chats with sub-channels, Locket-style photo sharing, and a clean, installable experience — no app store needed.
+A clean, privacy-first chat app for everyone. End-to-end encrypted DMs, group chats with sub-channels, Locket-style photo sharing, and a clean, installable experience — no app store needed.
 
 ## Status
 

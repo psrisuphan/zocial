@@ -1,7 +1,7 @@
 {
   "name": "Zocial",
   "short_name": "Zocial",
-  "description": "A privacy-first PWA chat app for Gen Z",
+  "description": "A clean, privacy-first chat app for everyone.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

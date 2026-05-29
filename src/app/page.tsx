@@ -7,7 +7,7 @@ export default function Home() {
       <div className="text-center max-w-sm w-full">
         <h1 className="text-2xl font-bold text-text-primary mb-1">Zocial</h1>
         <p className="text-sm text-text-muted mb-8">
-          A privacy-first chat app for Gen Z
+          A clean, privacy-first chat app for everyone.
         </p>
         <div className="flex flex-col gap-3">
           <Link href="/auth/signup">

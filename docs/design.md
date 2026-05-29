@@ -1,6 +1,6 @@
 # Zocial — Design Document
 
-> **App name:** Zocial (Gen-Z social/chat app)
+> **App name:** Zocial
 > **Status:** Design / pre-implementation
 > **Last updated:** 2026-05-29
 
