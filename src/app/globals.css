@@ -93,6 +93,18 @@ code, pre, kbd {
   font-family: 'Noto Sans Mono', monospace;
 }
 
+/* ── Theme transition (only during toggle, not on hover) ─── */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease,
+    fill 250ms ease !important;
+}
+
 /* ── Scrollbar styling (Discord-like) ────────────────────── */
 ::-webkit-scrollbar {
   width: 8px;
