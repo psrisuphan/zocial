@@ -1,24 +1,25 @@
+import { Button } from "@/components/ui";
+import Link from "next/link";
+
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-950 dark:to-slate-900">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Zocial</h1>
-        <p className="text-lg text-slate-600 dark:text-slate-400 mb-8">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-bg-primary px-4">
+      <div className="text-center max-w-sm w-full">
+        <h1 className="text-2xl font-bold text-text-primary mb-1">Zocial</h1>
+        <p className="text-sm text-text-muted mb-8">
           A privacy-first chat app for Gen Z
         </p>
-        <div className="flex gap-4 justify-center">
-          <a
-            href="/auth/signup"
-            className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
-          >
-            Sign Up
-          </a>
-          <a
-            href="/auth/login"
-            className="px-8 py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100 rounded-lg font-semibold hover:bg-slate-300 dark:hover:bg-slate-600 transition"
-          >
-            Log In
-          </a>
+        <div className="flex flex-col gap-3">
+          <Link href="/auth/signup">
+            <Button variant="primary" size="lg" fullWidth>
+              Create Account
+            </Button>
+          </Link>
+          <Link href="/auth/login">
+            <Button variant="ghost" size="lg" fullWidth>
+              Log In
+            </Button>
+          </Link>
         </div>
       </div>
     </main>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button, Input, Card } from "@/components/ui";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -18,76 +19,57 @@ export default function SignUp() {
     setLoading(true);
     setError(null);
 
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+    const { error } = await supabase.auth.signUp({ email, password });
 
-      if (error) {
-        setError(error.message);
-        return;
-      }
-
-      router.push("/auth/setup-profile");
-    } catch (err) {
-      setError("An unexpected error occurred");
-    } finally {
+    if (error) {
+      setError(error.message);
       setLoading(false);
+      return;
     }
+
+    router.push("/auth/setup-profile");
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-8">
-      <h1 className="text-3xl font-bold mb-2">Create Account</h1>
-      <p className="text-slate-600 dark:text-slate-400 mb-6">
-        Join Zocial to start chatting
-      </p>
+    <Card>
+      <h1 className="text-xl font-bold text-text-primary mb-1">Create Account</h1>
+      <p className="text-sm text-text-muted mb-6">Join Zocial to start chatting</p>
 
-      <form onSubmit={handleSignUp} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
+      <form onSubmit={handleSignUp} className="flex flex-col gap-4">
+        <Input
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          required
+        />
+        <Input
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="••••••••"
+          required
+        />
 
         {error && (
-          <div className="p-3 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100 rounded">
+          <p className="text-xs text-status-error bg-status-error/10 px-3 py-2 rounded">
             {error}
-          </div>
+          </p>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50"
-        >
+        <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading}>
           {loading ? "Creating..." : "Sign Up"}
-        </button>
+        </Button>
       </form>
 
-      <p className="mt-6 text-center text-slate-600 dark:text-slate-400">
+      <p className="mt-5 text-center text-sm text-text-muted">
         Already have an account?{" "}
-        <Link href="/auth/login" className="text-blue-600 hover:underline">
+        <Link href="/auth/login" className="text-text-link hover:underline">
           Log in
         </Link>
       </p>
-    </div>
+    </Card>
   );
 }

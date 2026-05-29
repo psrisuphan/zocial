@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { Avatar, Button, useTheme } from "@/components/ui";
 import { User } from "@/types";
 
 export default function Dashboard() {
@@ -10,27 +11,22 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const getUser = async () => {
       const { data } = await supabase.auth.getSession();
-      if (!data.session) {
-        router.push("/auth/login");
-        return;
-      }
+      if (!data.session) { router.push("/auth/login"); return; }
 
-      const { data: profileData } = await supabase
+      const { data: profile } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", data.session.user.id)
         .single();
 
-      if (profileData) {
-        setUser(profileData);
-      }
+      if (profile) setUser(profile);
       setLoading(false);
     };
-
     getUser();
   }, [router, supabase]);
 
@@ -41,49 +37,43 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-bg-primary">
+        <p className="text-text-muted text-sm">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-950 dark:to-slate-900 p-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-8">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-3xl font-bold">{user?.display_name}</h1>
-              <p className="text-slate-600 dark:text-slate-400">@{user?.username}</p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-            >
-              Log Out
-            </button>
+    <div className="min-h-screen bg-bg-primary flex flex-col">
+      {/* Top bar */}
+      <header className="h-12 bg-bg-secondary border-b border-border flex items-center justify-between px-4">
+        <span className="text-sm font-semibold text-text-primary">Zocial</span>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={toggleTheme}>
+            {theme === "dark" ? "☀️" : "🌙"}
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handleLogout}>
+            Log out
+          </Button>
+        </div>
+      </header>
+
+      {/* Content */}
+      <main className="flex-1 flex items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <Avatar src={user?.avatar_url} name={user?.display_name} size="lg" />
+          <div>
+            <p className="text-lg font-semibold text-text-primary">{user?.display_name}</p>
+            <p className="text-sm text-text-muted">@{user?.username}</p>
+            {user?.bio && (
+              <p className="text-sm text-text-secondary mt-2 max-w-xs">{user.bio}</p>
+            )}
           </div>
-
-          {user?.bio && (
-            <p className="text-slate-700 dark:text-slate-300 mb-6">{user.bio}</p>
-          )}
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded">
-              <p className="text-sm text-slate-600 dark:text-slate-400">Member since</p>
-              <p className="font-semibold">
-                {new Date(user?.created_at || "").toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-950 rounded text-center">
-            <p className="text-slate-700 dark:text-slate-300">
-              🚀 Phase 0 complete! Friends, DMs, and groups coming next.
-            </p>
+          <div className="mt-4 px-4 py-3 bg-bg-surface rounded-lg border border-border text-sm text-text-muted">
+            Phase 0 complete — friends, DMs, and groups coming next.
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
