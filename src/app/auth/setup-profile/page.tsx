@@ -55,6 +55,8 @@ export default function SetupProfile() {
         <Input
           label="Username"
           type="text"
+          name="username"
+          autoComplete="username"
           value={username}
           onChange={(e) => { setUsername(e.target.value); checkUsername(e.target.value); }}
           placeholder="johndoe"
@@ -65,6 +67,8 @@ export default function SetupProfile() {
         <Input
           label="Display Name"
           type="text"
+          name="display_name"
+          autoComplete="name"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
           placeholder="John Doe"
