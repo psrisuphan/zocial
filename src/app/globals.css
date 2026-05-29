@@ -2,16 +2,118 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+/* ── Google Fonts ─────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans+Mono:wght@100..900&display=swap');
+
+/* ── Design tokens — dark mode (default) ─────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-primary:    #313338;
+  --bg-secondary:  #2B2D31;
+  --bg-tertiary:   #1E1F22;
+  --bg-surface:    #383A40;
+  --bg-hover:      #404249;
+
+  /* Text */
+  --text-primary:   #F2F3F5;
+  --text-secondary: #B5BAC1;
+  --text-muted:     #80848E;
+  --text-link:      #A8D5B5;
+
+  /* Accent — pastel sage-mint green */
+  --accent:         #A8D5B5;
+  --accent-hover:   #8FC4A0;
+  --accent-active:  #79B38C;
+  --accent-subtle:  rgba(168, 213, 181, 0.12);
+
+  /* Status */
+  --color-error:   #F87171;
+  --color-success: #A8D5B5;
+  --color-warning: #FBBF24;
+
+  /* Border */
+  --border:        #3F4147;
+  --border-subtle: #2E3035;
+
+  /* Sidebar widths */
+  --sidebar-width: 240px;
+}
+
+/* ── Light mode overrides ─────────────────────────────────── */
+.light {
+  --bg-primary:    #FFFFFF;
+  --bg-secondary:  #F2F3F5;
+  --bg-tertiary:   #E3E5E8;
+  --bg-surface:    #EBEDEF;
+  --bg-hover:      #D7D8DA;
+
+  --text-primary:   #060607;
+  --text-secondary: #4E5058;
+  --text-muted:     #80848E;
+  --text-link:      #3D8C5C;
+
+  --accent:         #4A9E6A;
+  --accent-hover:   #3D8C5C;
+  --accent-active:  #2F7A4E;
+  --accent-subtle:  rgba(74, 158, 106, 0.10);
+
+  --color-error:   #DC2626;
+  --color-success: #4A9E6A;
+  --color-warning: #D97706;
+
+  --border:        #D7D8DA;
+  --border-subtle: #E3E5E8;
+}
+
+/* ── Base styles ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 body {
-  @apply bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors;
+  font-family: 'Noto Sans', 'Noto Sans Thai', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Monospace */
+code, pre, kbd {
+  font-family: 'Noto Sans Mono', monospace;
+}
+
+/* ── Scrollbar styling (Discord-like) ────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ── Selection ───────────────────────────────────────────── */
+::selection {
+  background: var(--accent-subtle);
+  color: var(--text-primary);
 }
