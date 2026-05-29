@@ -73,6 +73,7 @@ Core pillars:
 - **`friend_requests`** — `id`, `sender_id`, `receiver_id`, `status` (pending/accepted/declined), `responded_at`
 - **`friendships`** — `user_id_a`, `user_id_b` (canonical ordered pair), unique
 - **`close_friends`** — `owner_id`, `friend_id` (owner's private close-friends list)
+- **`contact_nicknames`** — `owner_id`, `friend_id`, `nickname` (nullable) — one-sided, private nickname (owner only knows; friend is unaware)
 
 ### Direct messages (E2EE)
 - **`dm_conversations`** — `id`, `user_a`, `user_b` (one row per pair)
@@ -152,6 +153,7 @@ Admins can do everything the creator can **except**: delete the group, change gr
 - Search users by `@username`.
 - Send request → recipient **accepts/declines**. On accept, a `friendship` row is created.
 - Manage a **close-friends** sub-list (private to the owner).
+- Set a **private one-sided nickname** for any friend (e.g., "BFF Sarah" for `@sarah_2024`). The friend doesn't know they've been nicknamed. Visible only to the owner in friends list and chats.
 
 ### 6.3 DMs (E2EE)
 - Content types: **text, links, images** (≤ **10 images/message**, EXIF/location stripped **client-side** before encryption+upload). No file attachments.
@@ -249,16 +251,18 @@ Each phase lists its **Goal**, **What we build**, **How (key tasks)**, and **Acc
 **What we build:** user search, friend request/accept/decline, friends list, close-friends management.
 
 **How (key tasks):**
-- Add `friend_requests`, `friendships`, `close_friends` tables + RLS.
+- Add `friend_requests`, `friendships`, `close_friends`, `contact_nicknames` tables + RLS.
 - Search by `@username` (indexed, case-insensitive).
 - Request flow with statuses (pending/accepted/declined); realtime update on incoming requests.
 - Friends list UI; close-friends add/remove toggle (private to owner).
+- One-sided nickname UI: long-press or edit button on a friend to set/edit/clear a private nickname (e.g., "BFF Sarah" for `@sarah_2024`); displayed in friends list and DM threads only to the owner.
 
 **Acceptance criteria:**
 - [ ] Search returns users by `@username`.
 - [ ] Send request → receiver sees it pending → accept creates a friendship; decline removes it.
 - [ ] Non-friends cannot open a DM with each other.
 - [ ] Add/remove a friend to/from close friends; list is visible only to its owner.
+- [ ] Set/edit/clear a private nickname for a friend; friend doesn't know; nickname appears in your friends list and DM thread, but friend never sees it.
 
 ---
 
