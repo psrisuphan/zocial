@@ -1,0 +1,58 @@
+"use client";
+
+import { useState, InputHTMLAttributes, forwardRef } from "react";
+import { clsx } from "clsx";
+
+interface PasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
+  label?: string;
+  error?: string;
+  hint?: string;
+}
+
+export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
+  ({ label, error, hint, className, id, ...props }, ref) => {
+    const [show, setShow] = useState(false);
+    const inputId = id || label?.toLowerCase().replace(/\s+/g, "-") || "password";
+
+    return (
+      <div className="flex flex-col gap-1.5">
+        {label && (
+          <label
+            htmlFor={inputId}
+            className="text-xs font-semibold uppercase tracking-wide text-text-secondary"
+          >
+            {label}
+          </label>
+        )}
+        <div className="relative">
+          <input
+            ref={ref}
+            id={inputId}
+            type={show ? "text" : "password"}
+            className={clsx(
+              "w-full px-3 py-2 pr-16 rounded bg-bg-tertiary border text-text-primary text-sm placeholder:text-text-muted transition-colors",
+              "focus:outline-none focus:border-accent",
+              error
+                ? "border-status-error"
+                : "border-border hover:border-text-muted",
+              className
+            )}
+            {...props}
+          />
+          <button
+            type="button"
+            tabIndex={-1}
+            onClick={() => setShow((v) => !v)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-text-muted hover:text-text-secondary transition-colors select-none"
+          >
+            {show ? "Hide" : "Show"}
+          </button>
+        </div>
+        {error && <p className="text-xs text-status-error">{error}</p>}
+        {hint && !error && <p className="text-xs text-text-muted">{hint}</p>}
+      </div>
+    );
+  }
+);
+
+PasswordInput.displayName = "PasswordInput";
