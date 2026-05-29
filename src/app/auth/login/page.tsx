@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button, Input, Card } from "@/components/ui";
+import { Button, Input, Card, PasswordInput } from "@/components/ui";
 
 export default function LogIn() {
   const [email, setEmail] = useState("");
@@ -22,7 +22,7 @@ export default function LogIn() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      setError(error.message);
+      setError("Incorrect email or password. Please try again.");
       setLoading(false);
       return;
     }
@@ -46,16 +46,27 @@ export default function LogIn() {
           placeholder="you@example.com"
           required
         />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
-          autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
-          required
-        />
+
+        <div className="flex flex-col gap-1">
+          <PasswordInput
+            label="Password"
+            id="password"
+            name="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+          />
+          <div className="flex justify-end">
+            <Link
+              href="/auth/forgot-password"
+              className="text-xs text-text-muted hover:text-text-link transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        </div>
 
         {error && (
           <p className="text-xs text-status-error bg-status-error/10 px-3 py-2 rounded">
@@ -63,7 +74,13 @@ export default function LogIn() {
           </p>
         )}
 
-        <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading}>
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          fullWidth
+          disabled={loading || !email || !password}
+        >
           {loading ? "Logging in..." : "Log In"}
         </Button>
       </form>
