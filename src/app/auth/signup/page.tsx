@@ -4,18 +4,32 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button, Input, Card } from "@/components/ui";
+import {
+  Button, Input, Card,
+  PasswordInput, PasswordRequirements,
+  checkPassword, isPasswordValid,
+} from "@/components/ui";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
+  const strength = checkPassword(password);
+  const passwordValid = isPasswordValid(strength);
+  const passwordsMatch = password === confirmPassword;
+  const confirmError =
+    confirmPassword.length > 0 && !passwordsMatch ? "Passwords do not match" : undefined;
+
+  const canSubmit = email && passwordValid && passwordsMatch && confirmPassword.length > 0;
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canSubmit) return;
     setLoading(true);
     setError(null);
 
@@ -46,14 +60,30 @@ export default function SignUp() {
           placeholder="you@example.com"
           required
         />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
+
+        <div className="flex flex-col gap-1">
+          <PasswordInput
+            label="Password"
+            id="password"
+            name="password"
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+          />
+          <PasswordRequirements password={password} visible={password.length > 0} />
+        </div>
+
+        <PasswordInput
+          label="Confirm Password"
+          id="confirm-password"
+          name="confirm-password"
           autoComplete="new-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="••••••••"
+          error={confirmError}
           required
         />
 
@@ -63,8 +93,14 @@ export default function SignUp() {
           </p>
         )}
 
-        <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading}>
-          {loading ? "Creating..." : "Sign Up"}
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          fullWidth
+          disabled={loading || !canSubmit}
+        >
+          {loading ? "Creating account..." : "Sign Up"}
         </Button>
       </form>
 
