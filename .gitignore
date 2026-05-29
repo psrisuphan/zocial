@@ -12,6 +12,9 @@ out/
 dist/
 build/
 
+# Next.js auto-generated files
+next-env.d.ts
+
 # Environment
 .env
 .env.local
