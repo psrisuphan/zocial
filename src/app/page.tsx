@@ -1,32 +1,25 @@
-import { Button, ThemeToggle } from "@/components/ui";
-import Link from "next/link";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase";
+import { Spinner } from "@/components/ui";
 
 export default function Home() {
+  const router = useRouter();
+  const supabase = createClient();
+
+  useEffect(() => {
+    const redirect = async () => {
+      const { data } = await supabase.auth.getSession();
+      router.replace(data.session ? "/dashboard" : "/auth/login");
+    };
+    redirect();
+  }, [router, supabase]);
+
   return (
-    <div className="min-h-screen flex flex-col bg-bg-primary">
-      <header className="h-12 bg-bg-secondary border-b border-border flex items-center justify-end px-4">
-        <ThemeToggle />
-      </header>
-      <main className="flex-1 flex items-center justify-center px-4 pb-12">
-        <div className="text-center max-w-sm w-full">
-          <h1 className="text-2xl font-bold text-text-primary mb-1">Zocial</h1>
-          <p className="text-sm text-text-muted mb-8">
-            A clean, privacy-first chat app for everyone.
-          </p>
-          <div className="flex flex-col gap-3">
-            <Link href="/auth/signup">
-              <Button variant="primary" size="lg" fullWidth>
-                Create Account
-              </Button>
-            </Link>
-            <Link href="/auth/login">
-              <Button variant="ghost" size="lg" fullWidth>
-                Log In
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </main>
+    <div className="min-h-screen flex items-center justify-center bg-bg-primary">
+      <Spinner size="lg" className="text-accent" />
     </div>
   );
 }
