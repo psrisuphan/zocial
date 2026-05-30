@@ -43,6 +43,30 @@ const config: Config = {
           warning: "var(--color-warning)",
         },
       },
+      animation: {
+        blink:          "blink 1s step-end infinite",
+        "fade-in":      "fadeIn 0.5s ease both",
+        "fade-in-up":   "fadeInUp 0.5s ease both",
+        "slide-in-left":"slideInLeft 0.4s ease both",
+      },
+      keyframes: {
+        blink: {
+          "0%, 100%": { opacity: "1" },
+          "50%":       { opacity: "0" },
+        },
+        fadeIn: {
+          from: { opacity: "0" },
+          to:   { opacity: "1" },
+        },
+        fadeInUp: {
+          from: { opacity: "0", transform: "translateY(14px)" },
+          to:   { opacity: "1", transform: "translateY(0)" },
+        },
+        slideInLeft: {
+          from: { opacity: "0", transform: "translateX(-10px)" },
+          to:   { opacity: "1", transform: "translateX(0)" },
+        },
+      },
       borderRadius: {
         sm: "4px",
         DEFAULT: "8px",
