@@ -44,7 +44,7 @@ export default function LogIn() {
 
       <form onSubmit={handleLogIn} className="flex flex-col gap-4">
         <Input
-          label="Email"
+          label="Email address"
           type="email"
           name="email"
           autoComplete="email"
