@@ -7,7 +7,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col bg-bg-primary">
-      <header className="flex justify-end p-3">
+      <header className="h-12 bg-bg-secondary border-b border-border flex items-center justify-end px-4">
         <ThemeToggle />
       </header>
       <main className="flex-1 flex items-center justify-center px-4 pb-12">
