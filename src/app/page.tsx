@@ -2,19 +2,17 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/features/auth";
 import { Spinner } from "@/components/ui";
 
 export default function Home() {
   const router = useRouter();
+  const { session, loading } = useAuth();
 
   useEffect(() => {
-    const redirect = async () => {
-      const { data } = await supabase.auth.getSession();
-      router.replace(data.session ? "/dashboard" : "/auth/login");
-    };
-    redirect();
-  }, [router]);
+    if (loading) return;
+    router.replace(session ? "/dashboard" : "/auth/login");
+  }, [router, session, loading]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-primary">

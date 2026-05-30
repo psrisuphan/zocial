@@ -1,39 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/features/auth";
 import { Avatar, Button, Spinner, ThemeToggle, useToast } from "@/components/ui";
-import { Profile } from "@/types";
 
 export default function Dashboard() {
-  const [user, setUser] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, session, loading, signOut } = useAuth();
   const [loggingOut, setLoggingOut] = useState(false);
   const router = useRouter();
   const toast = useToast();
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) { router.push("/auth/login"); return; }
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", data.session.user.id)
-        .single();
-
-      if (profile) setUser(profile);
-      setLoading(false);
-    };
-    getUser();
-  }, [router]);
+    if (!loading && !session) router.push("/auth/login");
+  }, [loading, session, router]);
 
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      await supabase.auth.signOut();
+      await signOut();
       toast.info("You've been signed out.");
       router.push("/");
     } catch {
@@ -42,7 +27,7 @@ export default function Dashboard() {
     }
   };
 
-  if (loading) {
+  if (loading || !session) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary">
         <div className="flex flex-col items-center gap-3">
