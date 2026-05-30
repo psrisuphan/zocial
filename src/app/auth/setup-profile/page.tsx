@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { createClient } from "@/lib/supabase";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import { Button, Input, Textarea, Card, ThemeToggle, useToast } from "@/components/ui";
+
+const USERNAME_RE = /^[a-z0-9_.]{3,30}$/;
 
 export default function SetupProfile() {
   const [username, setUsername] = useState("");
@@ -13,27 +15,61 @@ export default function SetupProfile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [usernameTaken, setUsernameTaken] = useState(false);
+  const [checkingUsername, setCheckingUsername] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
   const toast = useToast();
 
-  const checkUsername = async (value: string) => {
-    if (!value) { setUsernameError(null); return; }
-    if (!/^[a-z0-9_.]{3,30}$/.test(value.toLowerCase())) {
-      setUsernameError("3–30 chars: letters, numbers, _ and . only");
+  // Synchronous format validation for instant feedback.
+  const handleUsernameChange = (value: string) => {
+    setUsername(value);
+    setUsernameTaken(false);
+    if (!value) {
+      setUsernameError(null);
       return;
     }
-    const { data } = await supabase
-      .from("profiles")
-      .select("username")
-      .eq("username", value.toLowerCase())
-      .maybeSingle();
-    setUsernameError(data ? "Username already taken" : null);
+    setUsernameError(
+      USERNAME_RE.test(value.toLowerCase())
+        ? null
+        : "3–30 chars: letters, numbers, _ and . only"
+    );
   };
+
+  // Debounced uniqueness check — only fires once a valid format settles.
+  useEffect(() => {
+    const value = username.toLowerCase();
+    if (!USERNAME_RE.test(value)) {
+      setCheckingUsername(false);
+      return;
+    }
+
+    let ignore = false;
+    setCheckingUsername(true);
+    const timer = setTimeout(async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("username", value)
+        .maybeSingle();
+      if (ignore) return;
+      setUsernameTaken(!!data);
+      setCheckingUsername(false);
+    }, 350);
+
+    return () => {
+      ignore = true;
+      clearTimeout(timer);
+    };
+  }, [username]);
+
+  const usernameMessage =
+    usernameError ?? (usernameTaken ? "Username already taken" : undefined);
+  const canSubmit =
+    !usernameMessage && !checkingUsername && !!username && !!displayName;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (usernameError) return;
+    if (!canSubmit) return;
     setLoading(true);
     setError(null);
 
@@ -98,54 +134,54 @@ export default function SetupProfile() {
               </div>
 
               <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
-        <Input
-          label="Username"
-          type="text"
-          name="username"
-          autoComplete="username"
-          value={username}
-          onChange={(e) => { setUsername(e.target.value); checkUsername(e.target.value); }}
-          placeholder="johndoe"
-          hint="How others will find and add you"
-          error={usernameError ?? undefined}
-          required
-        />
-        <Input
-          label="Display Name"
-          type="text"
-          name="display_name"
-          autoComplete="name"
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-          placeholder="John Doe"
-          hint="Shown in chats and your profile"
-          required
-        />
-        <Textarea
-          label="Bio"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          placeholder="Tell people about yourself..."
-          rows={3}
-        />
+                <Input
+                  label="Username"
+                  type="text"
+                  name="username"
+                  autoComplete="username"
+                  value={username}
+                  onChange={(e) => handleUsernameChange(e.target.value)}
+                  placeholder="johndoe"
+                  hint={checkingUsername ? "Checking availability…" : "How others will find and add you"}
+                  error={usernameMessage}
+                  required
+                />
+                <Input
+                  label="Display Name"
+                  type="text"
+                  name="display_name"
+                  autoComplete="name"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="John Doe"
+                  hint="Shown in chats and your profile"
+                  required
+                />
+                <Textarea
+                  label="Bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Tell people about yourself..."
+                  rows={3}
+                />
 
-        {error && (
-          <p className="text-xs text-status-error bg-status-error/10 px-3 py-2 rounded">
-            {error}
-          </p>
-        )}
+                {error && (
+                  <p className="text-xs text-status-error bg-status-error/10 px-3 py-2 rounded">
+                    {error}
+                  </p>
+                )}
 
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          fullWidth
-          loading={loading}
-          disabled={!!usernameError || !username || !displayName}
-        >
-          Continue
-        </Button>
-      </form>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  loading={loading}
+                  disabled={!canSubmit}
+                >
+                  Continue
+                </Button>
+              </form>
             </div>
           </Card>
         </div>

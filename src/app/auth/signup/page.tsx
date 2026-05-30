@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -20,7 +20,6 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const supabase = createClient();
   const toast = useToast();
 
   const strength = checkPassword(password);

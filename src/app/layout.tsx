@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider, ToastProvider } from "@/components/ui";
+import { AuthProvider } from "@/components/features/auth";
 
 export const metadata: Metadata = {
   title: "Zocial",
@@ -38,7 +39,9 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>
