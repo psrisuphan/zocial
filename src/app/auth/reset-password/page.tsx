@@ -6,7 +6,7 @@ import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  Button, Card, useToast,
+  Button, useToast,
   PasswordInput, PasswordRequirements,
   checkPassword, isPasswordValid,
 } from "@/components/ui";
@@ -54,23 +54,21 @@ export default function ResetPassword() {
   if (done) {
     return (
       <AuthShell>
-      <Card>
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-xl font-bold text-accent">
-            ✓
-          </div>
-          <h1 className="text-xl font-bold text-text-primary mb-2">Password Updated</h1>
-          <p className="text-sm text-text-muted">Redirecting you to the app...</p>
+      <div className="text-center">
+        <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-xl font-bold text-accent">
+          ✓
         </div>
-      </Card>
+        <h1 className="text-2xl font-bold text-text-primary mb-2">Password Updated</h1>
+        <p className="text-sm text-text-muted">Redirecting you to the app...</p>
+      </div>
       </AuthShell>
     );
   }
 
   return (
     <AuthShell>
-    <Card>
-      <h1 className="text-xl font-bold text-text-primary mb-1">Set New Password</h1>
+    <div>
+      <h1 className="text-2xl font-bold text-text-primary mb-1">Set New Password</h1>
       <p className="text-sm text-text-muted mb-6">Choose a strong new password.</p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -123,7 +121,7 @@ export default function ResetPassword() {
           Back to Log In
         </Link>
       </p>
-    </Card>
+    </div>
     </AuthShell>
   );
 }

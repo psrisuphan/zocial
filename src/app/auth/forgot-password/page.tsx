@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { getAuthError } from "@/lib/authErrors";
 import Link from "next/link";
-import { Button, Input, Card } from "@/components/ui";
+import { Button, Input } from "@/components/ui";
 import { AuthShell } from "@/components/features/auth";
 
 export default function ForgotPassword() {
@@ -41,32 +41,30 @@ export default function ForgotPassword() {
   if (sent) {
     return (
       <AuthShell>
-      <Card>
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-xl font-bold text-accent">
-            ✓
-          </div>
-          <h1 className="text-xl font-bold text-text-primary mb-2">Check your email</h1>
-          <p className="text-sm text-text-muted mb-6">
-            We sent a password reset link to{" "}
-            <span className="text-text-secondary font-medium">{email}</span>.
-            Check your inbox and follow the link.
-          </p>
-          <Link href="/auth/login">
-            <Button variant="ghost" size="md" fullWidth>
-              Back to Log In
-            </Button>
-          </Link>
+      <div className="text-center">
+        <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-xl font-bold text-accent">
+          ✓
         </div>
-      </Card>
+        <h1 className="text-2xl font-bold text-text-primary mb-2">Check your email</h1>
+        <p className="text-sm text-text-muted mb-6">
+          We sent a password reset link to{" "}
+          <span className="text-text-secondary font-medium">{email}</span>.
+          Check your inbox and follow the link.
+        </p>
+        <Link href="/auth/login">
+          <Button variant="ghost" size="md" fullWidth>
+            Back to Log In
+          </Button>
+        </Link>
+      </div>
       </AuthShell>
     );
   }
 
   return (
     <AuthShell>
-    <Card>
-      <h1 className="text-xl font-bold text-text-primary mb-1">Forgot Password</h1>
+    <div>
+      <h1 className="text-2xl font-bold text-text-primary mb-1">Forgot Password</h1>
       <p className="text-sm text-text-muted mb-6">
         Enter your email and we&apos;ll send you a reset link.
       </p>
@@ -107,7 +105,7 @@ export default function ForgotPassword() {
           Log in
         </Link>
       </p>
-    </Card>
+    </div>
     </AuthShell>
   );
 }

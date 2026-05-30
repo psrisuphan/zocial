@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button, Input, Card, PasswordInput, useToast } from "@/components/ui";
+import { Button, Input, PasswordInput, useToast } from "@/components/ui";
 import { AuthShell } from "@/components/features/auth";
 
 export default function LogIn() {
@@ -39,8 +39,8 @@ export default function LogIn() {
 
   return (
     <AuthShell>
-    <Card>
-      <h1 className="text-xl font-bold text-text-primary mb-1">Welcome Back</h1>
+    <div>
+      <h1 className="text-2xl font-bold text-text-primary mb-1">Welcome Back</h1>
       <p className="text-sm text-text-muted mb-6">Log in to your Zocial account</p>
 
       <form onSubmit={handleLogIn} className="flex flex-col gap-4">
@@ -100,7 +100,7 @@ export default function LogIn() {
           Sign up
         </Link>
       </p>
-    </Card>
+    </div>
     </AuthShell>
   );
 }

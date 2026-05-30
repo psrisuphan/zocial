@@ -6,7 +6,7 @@ import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  Button, Input, Card,
+  Button, Input,
   PasswordInput, PasswordRequirements,
   checkPassword, isPasswordValid,
   useToast,
@@ -53,8 +53,8 @@ export default function SignUp() {
 
   return (
     <AuthShell>
-    <Card>
-      <h1 className="text-xl font-bold text-text-primary mb-1">Create Account</h1>
+    <div>
+      <h1 className="text-2xl font-bold text-text-primary mb-1">Create Account</h1>
       <p className="text-sm text-text-muted mb-6">Join Zocial to start chatting</p>
 
       <form onSubmit={handleSignUp} className="flex flex-col gap-4">
@@ -119,7 +119,7 @@ export default function SignUp() {
           Log in
         </Link>
       </p>
-    </Card>
+    </div>
     </AuthShell>
   );
 }
