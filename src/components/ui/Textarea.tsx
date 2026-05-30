@@ -1,5 +1,6 @@
 import { TextareaHTMLAttributes, forwardRef } from "react";
 import { clsx } from "clsx";
+import { FloatingLabel } from "./FloatingLabel";
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -13,27 +14,27 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <div className="flex flex-col gap-1.5">
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="text-xs font-semibold uppercase tracking-wide text-text-secondary"
-          >
-            {label}
-          </label>
-        )}
-        <textarea
-          ref={ref}
-          id={inputId}
-          className={clsx(
-            "w-full px-3 py-2 rounded bg-bg-tertiary border text-text-primary text-sm placeholder:text-text-muted transition-colors resize-none",
-            "focus:outline-none focus:border-accent",
-            error
-              ? "border-status-error"
-              : "border-border hover:border-text-muted",
-            className
+        <div className="relative">
+          <textarea
+            ref={ref}
+            id={inputId}
+            placeholder=" "
+            className={clsx(
+              "peer w-full px-3 pt-5 pb-2 rounded bg-bg-tertiary border text-text-primary text-sm placeholder-transparent transition-colors resize-none",
+              "focus:outline-none focus:border-accent",
+              error
+                ? "border-status-error"
+                : "border-border hover:border-text-muted",
+              className
+            )}
+            {...props}
+          />
+          {label && (
+            <FloatingLabel htmlFor={inputId} hasError={!!error}>
+              {label}
+            </FloatingLabel>
           )}
-          {...props}
-        />
+        </div>
         {error && <p className="text-xs text-status-error">{error}</p>}
         {hint && !error && <p className="text-xs text-text-muted">{hint}</p>}
       </div>
