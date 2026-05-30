@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import type { AuthContextValue, Profile } from "@/types";
@@ -13,6 +13,7 @@ const AuthContext = createContext<AuthContextValue>({
   session: null,
   loading: true,
   signOut: async () => {},
+  refreshProfile: async () => {},
 });
 
 /**
@@ -26,17 +27,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const loadProfile = useCallback(async (uid: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select(PROFILE_COLUMNS)
+      .eq("id", uid)
+      .single();
+    setUser((data as Profile) ?? null);
+  }, []);
+
   useEffect(() => {
     let active = true;
-
-    const loadProfile = async (uid: string) => {
-      const { data } = await supabase
-        .from("profiles")
-        .select(PROFILE_COLUMNS)
-        .eq("id", uid)
-        .single();
-      if (active) setUser((data as Profile) ?? null);
-    };
 
     const init = async () => {
       const { data } = await supabase.auth.getSession();
@@ -60,14 +61,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       active = false;
       sub.subscription.unsubscribe();
     };
-  }, []);
+  }, [loadProfile]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
   };
 
+  const refreshProfile = useCallback(async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) return;
+    await loadProfile(data.session.user.id);
+  }, [loadProfile]);
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );
