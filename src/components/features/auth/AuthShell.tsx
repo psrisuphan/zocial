@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/ui";
 
 const WORDMARK = "Zocial";
-const TYPING_SPEED = 110; // ms per character
+const TYPING_SPEED = 110;
 
 const loginHighlights = [
   { icon: "🔒", label: "End-to-end encrypted DMs" },
@@ -14,42 +14,70 @@ const loginHighlights = [
 ];
 
 const signupHighlights = [
-  { icon: "👋", label: "Add friends and build your circle" },
-  { icon: "🔐", label: "Chat with end-to-end encryption" },
-  { icon: "📸", label: "Share photos and moments with friends" },
+  {
+    title: "Your privacy, guaranteed",
+    description:
+      "Every direct message is end-to-end encrypted — only you and the person you're talking to can read it.",
+  },
+  {
+    title: "Connect with the people you care about",
+    description:
+      "Add friends, create group chats, and keep everyone close — all in one place.",
+  },
+  {
+    title: "Share your moments",
+    description:
+      "Send photos and relive memories with the friends and family closest to you.",
+  },
 ];
 
 export function AuthShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isSignup = pathname === "/auth/signup";
-  const highlights = isSignup ? signupHighlights : loginHighlights;
+  const pathname  = usePathname();
+  const isSignup  = pathname === "/auth/signup";
 
-  const [typed, setTyped]     = useState("");
-  const [typingDone, setTypingDone] = useState(false);
-  const [featureIndex, setFeatureIndex] = useState(0);
+  const [typed,          setTyped]          = useState("");
+  const [ready,          setReady]          = useState(false);
+  const [featureIndex,   setFeatureIndex]   = useState(0);
+  const [featureVisible, setFeatureVisible] = useState(true);
 
+  // Reset and re-run intro animation on every page switch
   useEffect(() => {
+    setTyped("");
+    setReady(false);
+    setFeatureIndex(0);
+    setFeatureVisible(true);
+
+    if (isSignup) {
+      // Signup: no typing — just wait one tick so CSS transitions register
+      const t = setTimeout(() => setReady(true), 80);
+      return () => clearTimeout(t);
+    }
+
+    // Login: type out the wordmark
     let i = 0;
     const timer = setInterval(() => {
       i++;
       setTyped(WORDMARK.slice(0, i));
       if (i >= WORDMARK.length) {
         clearInterval(timer);
-        setTimeout(() => setTypingDone(true), 200);
+        setTimeout(() => setReady(true), 200);
       }
     }, TYPING_SPEED);
     return () => clearInterval(timer);
-  }, []);
+  }, [isSignup]);
 
-  // rotate features every 4 seconds for signup
+  // Rotate signup features with a smooth fade-out → swap → fade-in
   useEffect(() => {
-    if (!isSignup || !typingDone) return;
-
+    if (!isSignup || !ready) return;
     const interval = setInterval(() => {
-      setFeatureIndex((prev) => (prev + 1) % highlights.length);
-    }, 4000);
+      setFeatureVisible(false);
+      setTimeout(() => {
+        setFeatureIndex((prev) => (prev + 1) % signupHighlights.length);
+        setFeatureVisible(true);
+      }, 450);
+    }, 4500);
     return () => clearInterval(interval);
-  }, [isSignup, typingDone, highlights.length]);
+  }, [isSignup, ready]);
 
   return (
     <div
@@ -72,39 +100,55 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
         <div className="pointer-events-none absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-accent opacity-[0.04] blur-3xl" />
 
         <div className="relative">
-          {/* typing wordmark */}
-          <span className="font-display text-4xl lg:text-5xl font-bold tracking-tight text-accent">
-            {typed}
-            <span
-              className={[
-                "inline-block w-[3px] h-9 lg:h-11 bg-accent align-middle ml-0.5 -mb-0.5 rounded-sm",
-                typingDone ? "opacity-0 transition-opacity duration-700" : "animate-blink",
-              ].join(" ")}
-            />
-          </span>
+          {isSignup ? (
+            /* ── Signup header — static, fades in ── */
+            <h1
+              className="font-display text-4xl lg:text-5xl font-bold tracking-tight text-accent transition-all duration-700 ease-out"
+              style={{
+                opacity:   ready ? 1 : 0,
+                transform: ready ? "translateY(0)" : "translateY(10px)",
+              }}
+            >
+              Join Us!
+            </h1>
+          ) : (
+            /* ── Login header — typing animation ── */
+            <span className="font-display text-4xl lg:text-5xl font-bold tracking-tight text-accent">
+              {typed}
+              <span
+                className={[
+                  "inline-block w-[3px] h-9 lg:h-11 bg-accent align-middle ml-0.5 -mb-0.5 rounded-sm",
+                  ready ? "opacity-0 transition-opacity duration-700" : "animate-blink",
+                ].join(" ")}
+              />
+            </span>
+          )}
 
-          {/* tagline — different based on page */}
+          {/* Tagline */}
           <p
             className="font-display italic mt-3 text-lg text-text-secondary max-w-sm leading-relaxed transition-all duration-700 ease-out"
             style={{
-              opacity: typingDone ? 1 : 0,
-              transform: typingDone ? "translateY(0)" : "translateY(8px)",
+              opacity:         ready ? 1 : 0,
+              transform:       ready ? "translateY(0)" : "translateY(8px)",
+              transitionDelay: ready ? "100ms" : "0ms",
             }}
           >
-            {isSignup ? "Join and start chatting on Zocial" : "A clean, privacy-first chat app for everyone."}
+            {isSignup
+              ? "Join and start chatting on Zocial."
+              : "A clean, privacy-first chat app for everyone."}
           </p>
 
-          {/* features: static list for login, rotating carousel for signup */}
-          {!isSignup ? (
+          {/* ── Login: static staggered list ── */}
+          {!isSignup && (
             <ul className="flex flex-col gap-3 mt-10">
-              {highlights.map((h, i) => (
+              {loginHighlights.map((h, i) => (
                 <li
                   key={h.label}
                   className="flex items-center gap-3 transition-all duration-500 ease-out"
                   style={{
-                    opacity: typingDone ? 1 : 0,
-                    transform: typingDone ? "translateX(0)" : "translateX(-10px)",
-                    transitionDelay: typingDone ? `${i * 120}ms` : "0ms",
+                    opacity:         ready ? 1 : 0,
+                    transform:       ready ? "translateX(0)" : "translateX(-10px)",
+                    transitionDelay: ready ? `${200 + i * 120}ms` : "0ms",
                   }}
                 >
                   <span className="w-9 h-9 rounded-lg bg-accent-subtle flex items-center justify-center text-base shrink-0">
@@ -114,20 +158,40 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
                 </li>
               ))}
             </ul>
-          ) : (
-            <div className="mt-10 min-h-[60px] flex items-center">
+          )}
+
+          {/* ── Signup: rotating feature card ── */}
+          {isSignup && (
+            <div className="mt-12 min-h-[110px]">
               <div
-                key={`${featureIndex}-${highlights[featureIndex].label}`}
-                className="flex items-center gap-3 transition-all duration-700 ease-out w-full"
+                className="transition-all ease-in-out"
                 style={{
-                  opacity: typingDone ? 1 : 0,
-                  transform: typingDone ? "translateX(0)" : "translateX(-10px)",
+                  opacity:          featureVisible && ready ? 1 : 0,
+                  transform:        featureVisible && ready ? "translateY(0)" : "translateY(8px)",
+                  transitionDuration: "450ms",
+                  transitionDelay:  ready && featureVisible ? "0ms" : "0ms",
                 }}
               >
-                <span className="w-9 h-9 rounded-lg bg-accent-subtle flex items-center justify-center text-base shrink-0">
-                  {highlights[featureIndex].icon}
-                </span>
-                <span className="text-sm text-text-secondary">{highlights[featureIndex].label}</span>
+                <h3 className="font-display font-semibold text-xl text-text-primary mb-2">
+                  {signupHighlights[featureIndex].title}
+                </h3>
+                <p className="font-display italic text-base text-text-secondary leading-relaxed max-w-sm">
+                  {signupHighlights[featureIndex].description}
+                </p>
+
+                {/* dot indicators */}
+                <div className="flex gap-2 mt-6">
+                  {signupHighlights.map((_, i) => (
+                    <span
+                      key={i}
+                      className="block h-1 rounded-full transition-all duration-500"
+                      style={{
+                        width:           i === featureIndex ? "20px" : "6px",
+                        backgroundColor: i === featureIndex ? "var(--accent)" : "var(--border)",
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           )}
