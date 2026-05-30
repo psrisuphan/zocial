@@ -52,7 +52,7 @@ export default function Dashboard() {
             onClick={handleLogout}
             loading={loggingOut}
           >
-            Log out
+            Sign out
           </Button>
         </div>
       </header>

@@ -52,7 +52,7 @@ export default function ForgotPassword() {
         </p>
         <Link href="/auth/login">
           <Button variant="ghost" size="md" fullWidth>
-            Back to Log In
+            Back to Sign In
           </Button>
         </Link>
       </div>
@@ -101,7 +101,7 @@ export default function ForgotPassword() {
       <p className="mt-5 text-center text-sm text-text-muted">
         Remember your password?{" "}
         <Link href="/auth/login" className="text-text-link hover:underline">
-          Log in
+          Sign in
         </Link>
       </p>
     </div>
