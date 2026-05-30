@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
+import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Button, Input, Card,
   PasswordInput, PasswordRequirements,
   checkPassword, isPasswordValid,
+  useToast,
 } from "@/components/ui";
 
 export default function SignUp() {
@@ -18,13 +20,13 @@ export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
+  const toast = useToast();
 
   const strength = checkPassword(password);
   const passwordValid = isPasswordValid(strength);
   const passwordsMatch = password === confirmPassword;
   const confirmError =
     confirmPassword.length > 0 && !passwordsMatch ? "Passwords do not match" : undefined;
-
   const canSubmit = email && passwordValid && passwordsMatch && confirmPassword.length > 0;
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -33,15 +35,19 @@ export default function SignUp() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({ email, password });
-
-    if (error) {
-      setError(error.message);
+    try {
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        setError(getAuthError(error.message));
+        return;
+      }
+      toast.success("Account created! Set up your profile.");
+      router.push("/auth/setup-profile");
+    } catch {
+      setError("Connection error. Please check your internet and try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push("/auth/setup-profile");
   };
 
   return (
@@ -98,9 +104,10 @@ export default function SignUp() {
           variant="primary"
           size="lg"
           fullWidth
-          disabled={loading || !canSubmit}
+          loading={loading}
+          disabled={!canSubmit}
         >
-          {loading ? "Creating account..." : "Sign Up"}
+          Sign Up
         </Button>
       </form>
 
