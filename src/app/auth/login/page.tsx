@@ -6,6 +6,7 @@ import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Input, Card, PasswordInput, useToast } from "@/components/ui";
+import { AuthShell } from "@/components/features/auth";
 
 export default function LogIn() {
   const [email, setEmail] = useState("");
@@ -37,6 +38,7 @@ export default function LogIn() {
   };
 
   return (
+    <AuthShell>
     <Card>
       <h1 className="text-xl font-bold text-text-primary mb-1">Welcome Back</h1>
       <p className="text-sm text-text-muted mb-6">Log in to your Zocial account</p>
@@ -99,5 +101,6 @@ export default function LogIn() {
         </Link>
       </p>
     </Card>
+    </AuthShell>
   );
 }
