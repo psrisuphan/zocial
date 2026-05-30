@@ -78,7 +78,7 @@ export default function SetupProfile() {
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
-        setError("Session expired. Please log in again.");
+        setError("Session expired. Please sign in again.");
         setLoading(false);
         return;
       }

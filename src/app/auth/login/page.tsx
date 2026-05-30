@@ -40,7 +40,7 @@ export default function LogIn() {
     <AuthShell>
     <div>
       <h1 className="text-2xl font-bold text-text-primary mb-1">Welcome Back</h1>
-      <p className="text-sm text-text-muted mb-6">Log in to your Zocial account</p>
+      <p className="text-sm text-text-muted mb-6">Sign in to your Zocial account</p>
 
       <form onSubmit={handleLogIn} className="flex flex-col gap-4">
         <Input
@@ -89,7 +89,7 @@ export default function LogIn() {
           loading={loading}
           disabled={!email || !password}
         >
-          Log In
+          Sign In
         </Button>
       </form>
 

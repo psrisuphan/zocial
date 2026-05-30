@@ -52,7 +52,7 @@ export default function ForgotPassword() {
         </p>
         <Link href="/auth/login">
           <Button variant="ghost" size="md" fullWidth>
-            Back to Log In
+            Back to Sign In
           </Button>
         </Link>
       </div>

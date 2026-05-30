@@ -117,7 +117,7 @@ export default function ResetPassword() {
 
       <p className="mt-5 text-center text-sm text-text-muted">
         <Link href="/auth/login" className="text-text-link hover:underline">
-          Back to Log In
+          Back to Sign In
         </Link>
       </p>
     </div>
