@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
+import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button, Input, Card, PasswordInput } from "@/components/ui";
+import { Button, Input, Card, PasswordInput, useToast } from "@/components/ui";
 
 export default function LogIn() {
   const [email, setEmail] = useState("");
@@ -13,21 +14,26 @@ export default function LogIn() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
+  const toast = useToast();
 
   const handleLogIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      setError("Incorrect email or password. Please try again.");
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError(getAuthError(error.message));
+        return;
+      }
+      toast.success("Welcome back!");
+      router.push("/dashboard");
+    } catch {
+      setError("Connection error. Please check your internet and try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push("/dashboard");
   };
 
   return (
@@ -79,9 +85,10 @@ export default function LogIn() {
           variant="primary"
           size="lg"
           fullWidth
-          disabled={loading || !email || !password}
+          loading={loading}
+          disabled={!email || !password}
         >
-          {loading ? "Logging in..." : "Log In"}
+          Log In
         </Button>
       </form>
 
