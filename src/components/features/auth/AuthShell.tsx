@@ -95,6 +95,9 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
           backgroundSize: "200% 200%",
         }}
       >
+        {/* noise grain */}
+        <div className="noise pointer-events-none absolute inset-0 opacity-[0.045] mix-blend-overlay" />
+
         {/* subtle accent glow */}
         <div className="pointer-events-none absolute -top-40 -left-40 w-96 h-96 rounded-full bg-accent opacity-[0.06] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-accent opacity-[0.04] blur-3xl" />
@@ -199,7 +202,10 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* ── Form panel ──────────────────────────────────────── */}
-      <main className="relative flex-1 flex flex-col bg-bg-primary">
+      <main className="relative flex-1 flex flex-col bg-bg-primary overflow-hidden">
+        {/* noise grain */}
+        <div className="noise pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay" />
+
         <header className="flex items-center justify-between px-4 py-3">
           <span className="md:hidden text-lg font-bold text-accent font-display">{WORDMARK}</span>
           <div className="ml-auto">
