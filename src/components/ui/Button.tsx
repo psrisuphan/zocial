@@ -25,7 +25,7 @@ export function Button({
     <button
       disabled={isDisabled}
       className={clsx(
-        "inline-flex items-center justify-center gap-2 font-medium rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer",
+        "inline-flex items-center justify-center gap-2 font-medium rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer",
         {
           "bg-accent text-bg-tertiary hover:bg-accent-hover active:bg-accent-active":
             variant === "primary",
