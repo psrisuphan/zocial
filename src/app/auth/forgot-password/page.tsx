@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
+import { getAuthError } from "@/lib/authErrors";
 import Link from "next/link";
 import { Button, Input, Card } from "@/components/ui";
 
@@ -22,26 +23,26 @@ export default function ForgotPassword() {
         ? `${window.location.origin}/auth/reset-password`
         : "/auth/reset-password";
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo,
-    });
-
-    if (error) {
-      setError(error.message);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+      if (error) {
+        setError(getAuthError(error.message));
+        return;
+      }
+      setSent(true);
+    } catch {
+      setError("Connection error. Please check your internet and try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setSent(true);
-    setLoading(false);
   };
 
   if (sent) {
     return (
       <Card>
         <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-2xl">
-            ✉️
+          <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-xl font-bold text-accent">
+            ✓
           </div>
           <h1 className="text-xl font-bold text-text-primary mb-2">Check your email</h1>
           <p className="text-sm text-text-muted mb-6">
@@ -89,9 +90,10 @@ export default function ForgotPassword() {
           variant="primary"
           size="lg"
           fullWidth
-          disabled={loading || !email}
+          loading={loading}
+          disabled={!email}
         >
-          {loading ? "Sending..." : "Send Reset Link"}
+          Send Reset Link
         </Button>
       </form>
 

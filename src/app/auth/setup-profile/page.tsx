@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
+import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
-import { Button, Input, Textarea, Card } from "@/components/ui";
+import { Button, Input, Textarea, Card, useToast } from "@/components/ui";
 
 export default function SetupProfile() {
   const [username, setUsername] = useState("");
@@ -14,6 +15,7 @@ export default function SetupProfile() {
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
+  const toast = useToast();
 
   const checkUsername = async (value: string) => {
     if (!value) { setUsernameError(null); return; }
@@ -35,19 +37,34 @@ export default function SetupProfile() {
     setLoading(true);
     setError(null);
 
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) { setError("Not authenticated"); setLoading(false); return; }
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        setError("Session expired. Please log in again.");
+        setLoading(false);
+        return;
+      }
 
-    const { error } = await supabase.from("profiles").insert([{
-      id: userData.user.id,
-      username: username.toLowerCase(),
-      display_name: displayName,
-      bio: bio || null,
-      avatar_url: null,
-    }]);
+      const { error } = await supabase.from("profiles").insert([{
+        id: userData.user.id,
+        username: username.toLowerCase(),
+        display_name: displayName,
+        bio: bio || null,
+        avatar_url: null,
+      }]);
 
-    if (error) { setError(error.message); setLoading(false); return; }
-    router.push("/dashboard");
+      if (error) {
+        setError(getAuthError(error.message));
+        return;
+      }
+
+      toast.success("Profile created! Welcome to Zocial.");
+      router.push("/dashboard");
+    } catch {
+      setError("Connection error. Please check your internet and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,7 +72,6 @@ export default function SetupProfile() {
       <h1 className="text-xl font-bold text-text-primary mb-1">Set Up Profile</h1>
       <p className="text-sm text-text-muted mb-6">Create your Zocial identity</p>
 
-      {/* Avatar placeholder — upload enabled in a future phase */}
       <div className="flex justify-center mb-6">
         <div
           title="Avatar upload coming soon"
@@ -113,9 +129,10 @@ export default function SetupProfile() {
           variant="primary"
           size="lg"
           fullWidth
-          disabled={loading || !!usernameError || !username || !displayName}
+          loading={loading}
+          disabled={!!usernameError || !username || !displayName}
         >
-          {loading ? "Setting up..." : "Continue"}
+          Continue
         </Button>
       </form>
     </Card>

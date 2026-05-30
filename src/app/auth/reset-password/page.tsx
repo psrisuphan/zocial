@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
+import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  Button, Card,
+  Button, Card, useToast,
   PasswordInput, PasswordRequirements,
   checkPassword, isPasswordValid,
 } from "@/components/ui";
@@ -18,6 +19,7 @@ export default function ResetPassword() {
   const [done, setDone] = useState(false);
   const router = useRouter();
   const supabase = createClient();
+  const toast = useToast();
 
   const strength = checkPassword(password);
   const passwordValid = isPasswordValid(strength);
@@ -32,23 +34,27 @@ export default function ResetPassword() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.updateUser({ password });
-
-    if (error) {
-      setError(error.message);
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) {
+        setError(getAuthError(error.message));
+        return;
+      }
+      setDone(true);
+      toast.success("Password updated successfully!");
+      setTimeout(() => router.push("/dashboard"), 2000);
+    } catch {
+      setError("Connection error. Please check your internet and try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setDone(true);
-    setTimeout(() => router.push("/dashboard"), 2000);
   };
 
   if (done) {
     return (
       <Card>
         <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-2xl">
+          <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-xl font-bold text-accent">
             ✓
           </div>
           <h1 className="text-xl font-bold text-text-primary mb-2">Password Updated</h1>
@@ -101,9 +107,10 @@ export default function ResetPassword() {
           variant="primary"
           size="lg"
           fullWidth
-          disabled={loading || !canSubmit}
+          loading={loading}
+          disabled={!canSubmit}
         >
-          {loading ? "Updating..." : "Update Password"}
+          Update Password
         </Button>
       </form>
 
