@@ -10,7 +10,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-bg-primary">
       {/* ── Brand panel ─────────────────────────────────────── */}
-      <aside className="relative md:w-1/2 lg:w-3/5 overflow-hidden bg-gradient-to-br from-accent via-accent-hover to-accent-active">
+      <aside className="relative md:w-1/2 lg:w-3/5 overflow-hidden bg-gradient-to-br from-accent/40 via-accent-hover/30 to-accent-active/20">
         {/* decorative blobs */}
         <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white/20 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 right-0 w-80 h-80 rounded-full bg-bg-tertiary/20 blur-3xl" />
