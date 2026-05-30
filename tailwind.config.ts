@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["'Noto Sans'", "'Noto Sans Thai'", "sans-serif"],
-        mono: ["'Noto Sans Mono'", "monospace"],
+        sans: ["'DM Sans'", "'Noto Sans Thai'", "sans-serif"],
+        mono: ["'DM Mono'", "monospace"],
         display: ["'Playfair Display'", "Georgia", "serif"],
       },
       colors: {
