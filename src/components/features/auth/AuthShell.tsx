@@ -1,20 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/ui";
 
 const WORDMARK = "Zocial";
 const TYPING_SPEED = 110; // ms per character
 
-const highlights = [
+const loginHighlights = [
   { icon: "🔒", label: "End-to-end encrypted DMs" },
   { icon: "💬", label: "Group chats & channels" },
   { icon: "📸", label: "Share photos with friends" },
 ];
 
+const signupHighlights = [
+  { icon: "👋", label: "Add friends and build your circle" },
+  { icon: "🔐", label: "Chat with end-to-end encryption" },
+  { icon: "📸", label: "Share photos and moments with friends" },
+];
+
 export function AuthShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isSignup = pathname === "/auth/signup";
+  const highlights = isSignup ? signupHighlights : loginHighlights;
+
   const [typed, setTyped]     = useState("");
   const [typingDone, setTypingDone] = useState(false);
+  const [featureIndex, setFeatureIndex] = useState(0);
 
   useEffect(() => {
     let i = 0;
@@ -23,12 +35,21 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
       setTyped(WORDMARK.slice(0, i));
       if (i >= WORDMARK.length) {
         clearInterval(timer);
-        // small pause then mark done so tagline + list animate in
         setTimeout(() => setTypingDone(true), 200);
       }
     }, TYPING_SPEED);
     return () => clearInterval(timer);
   }, []);
+
+  // rotate features every 4 seconds for signup
+  useEffect(() => {
+    if (!isSignup || !typingDone) return;
+
+    const interval = setInterval(() => {
+      setFeatureIndex((prev) => (prev + 1) % highlights.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [isSignup, typingDone, highlights.length]);
 
   return (
     <div
@@ -62,7 +83,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
             />
           </span>
 
-          {/* tagline — always rendered, fades in after typing */}
+          {/* tagline — different based on page */}
           <p
             className="font-display italic mt-3 text-lg text-text-secondary max-w-sm leading-relaxed transition-all duration-700 ease-out"
             style={{
@@ -70,28 +91,46 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
               transform: typingDone ? "translateY(0)" : "translateY(8px)",
             }}
           >
-            A clean, privacy-first chat app for everyone.
+            {isSignup ? "Join and start chatting on Zocial" : "A clean, privacy-first chat app for everyone."}
           </p>
 
-          {/* feature list — always rendered, staggered transitions */}
-          <ul className="flex flex-col gap-3 mt-10">
-            {highlights.map((h, i) => (
-              <li
-                key={h.label}
-                className="flex items-center gap-3 transition-all duration-500 ease-out"
+          {/* features: static list for login, rotating carousel for signup */}
+          {!isSignup ? (
+            <ul className="flex flex-col gap-3 mt-10">
+              {highlights.map((h, i) => (
+                <li
+                  key={h.label}
+                  className="flex items-center gap-3 transition-all duration-500 ease-out"
+                  style={{
+                    opacity: typingDone ? 1 : 0,
+                    transform: typingDone ? "translateX(0)" : "translateX(-10px)",
+                    transitionDelay: typingDone ? `${i * 120}ms` : "0ms",
+                  }}
+                >
+                  <span className="w-9 h-9 rounded-lg bg-accent-subtle flex items-center justify-center text-base shrink-0">
+                    {h.icon}
+                  </span>
+                  <span className="text-sm text-text-secondary">{h.label}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-10 min-h-[60px] flex items-center">
+              <div
+                key={`${featureIndex}-${highlights[featureIndex].label}`}
+                className="flex items-center gap-3 transition-all duration-700 ease-out w-full"
                 style={{
                   opacity: typingDone ? 1 : 0,
                   transform: typingDone ? "translateX(0)" : "translateX(-10px)",
-                  transitionDelay: typingDone ? `${i * 120}ms` : "0ms",
                 }}
               >
                 <span className="w-9 h-9 rounded-lg bg-accent-subtle flex items-center justify-center text-base shrink-0">
-                  {h.icon}
+                  {highlights[featureIndex].icon}
                 </span>
-                <span className="text-sm text-text-secondary">{h.label}</span>
-              </li>
-            ))}
-          </ul>
+                <span className="text-sm text-text-secondary">{highlights[featureIndex].label}</span>
+              </div>
+            </div>
+          )}
         </div>
       </aside>
 
