@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { Avatar, Button, useTheme } from "@/components/ui";
+import { Avatar, Button, ThemeToggle } from "@/components/ui";
 import { User } from "@/types";
 
 export default function Dashboard() {
@@ -11,7 +11,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const getUser = async () => {
@@ -49,9 +48,7 @@ export default function Dashboard() {
       <header className="h-12 bg-bg-secondary border-b border-border flex items-center justify-between px-4">
         <span className="text-sm font-semibold text-text-primary">Zocial</span>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={toggleTheme}>
-            {theme === "dark" ? "☀️" : "🌙"}
-          </Button>
+          <ThemeToggle />
           <Button variant="ghost" size="sm" onClick={handleLogout}>
             Log out
           </Button>
