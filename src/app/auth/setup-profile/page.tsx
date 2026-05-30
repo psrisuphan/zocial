@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import { Button, Input, Textarea, Card, ThemeToggle, useToast } from "@/components/ui";
+import { useAuth } from "@/components/features/auth";
 
 const USERNAME_RE = /^[a-z0-9_.]{3,30}$/;
 
@@ -19,6 +20,7 @@ export default function SetupProfile() {
   const [checkingUsername, setCheckingUsername] = useState(false);
   const router = useRouter();
   const toast = useToast();
+  const { refreshProfile } = useAuth();
 
   // Synchronous format validation for instant feedback.
   const handleUsernameChange = (value: string) => {
@@ -94,6 +96,7 @@ export default function SetupProfile() {
         return;
       }
 
+      await refreshProfile();
       toast.success("Profile created! Welcome to Zocial.");
       router.push("/dashboard");
     } catch {

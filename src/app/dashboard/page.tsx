@@ -12,8 +12,10 @@ export default function Dashboard() {
   const toast = useToast();
 
   useEffect(() => {
-    if (!loading && !session) router.push("/auth/login");
-  }, [loading, session, router]);
+    if (loading) return;
+    if (!session) { router.push("/auth/login"); return; }
+    if (!user)    { router.push("/auth/setup-profile"); return; }
+  }, [loading, session, user, router]);
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -27,7 +29,7 @@ export default function Dashboard() {
     }
   };
 
-  if (loading || !session) {
+  if (loading || !session || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary">
         <div className="flex flex-col items-center gap-3">

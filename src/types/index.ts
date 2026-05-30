@@ -22,4 +22,6 @@ export interface AuthContextValue {
   session: Session | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  /** Re-fetches the profile row for the current session user. Call after profile creation. */
+  refreshProfile: () => Promise<void>;
 }
