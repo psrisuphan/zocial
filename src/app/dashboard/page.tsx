@@ -3,14 +3,16 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { Avatar, Button, ThemeToggle } from "@/components/ui";
+import { Avatar, Button, Spinner, ThemeToggle, useToast } from "@/components/ui";
 import { User } from "@/types";
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loggingOut, setLoggingOut] = useState(false);
   const router = useRouter();
   const supabase = createClient();
+  const toast = useToast();
 
   useEffect(() => {
     const getUser = async () => {
@@ -30,32 +32,45 @@ export default function Dashboard() {
   }, [router, supabase]);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
+    setLoggingOut(true);
+    try {
+      await supabase.auth.signOut();
+      toast.info("You've been signed out.");
+      router.push("/");
+    } catch {
+      toast.error("Failed to sign out. Please try again.");
+      setLoggingOut(false);
+    }
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary">
-        <p className="text-text-muted text-sm">Loading...</p>
+        <div className="flex flex-col items-center gap-3">
+          <Spinner size="lg" className="text-accent" />
+          <p className="text-text-muted text-sm">Loading...</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col">
-      {/* Top bar */}
       <header className="h-12 bg-bg-secondary border-b border-border flex items-center justify-between px-4">
         <span className="text-sm font-semibold text-text-primary">Zocial</span>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button variant="ghost" size="sm" onClick={handleLogout}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleLogout}
+            loading={loggingOut}
+          >
             Log out
           </Button>
         </div>
       </header>
 
-      {/* Content */}
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-4 text-center">
           <Avatar src={user?.avatar_url} name={user?.display_name} size="lg" />
