@@ -10,19 +10,24 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-bg-primary">
       {/* ── Brand panel ─────────────────────────────────────── */}
-      <aside className="relative md:w-1/2 lg:w-3/5 overflow-hidden bg-gradient-to-br from-accent/65 via-accent-hover/55 to-accent-active/45">
+      <aside
+        className="relative md:w-1/2 lg:w-3/5 overflow-hidden"
+        style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-active))" }}
+      >
+        {/* muting overlay — blends accent with page bg to reduce intensity */}
+        <div className="absolute inset-0 bg-bg-primary/50" />
         {/* decorative blobs */}
-        <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white/20 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 right-0 w-80 h-80 rounded-full bg-bg-tertiary/20 blur-3xl" />
+        <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white/10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 right-0 w-80 h-80 rounded-full bg-bg-tertiary/15 blur-3xl" />
 
         {/* mobile: compact header / desktop: full panel */}
         <div className="relative h-full flex flex-col justify-center px-6 py-8 md:px-12 lg:px-20">
           <div className="flex items-center gap-2 mb-2 md:mb-6">
-            <span className="text-2xl md:text-4xl font-bold text-bg-tertiary tracking-tight">
+            <span className="text-2xl md:text-4xl font-bold text-text-primary tracking-tight">
               Zocial
             </span>
           </div>
-          <p className="text-sm md:text-xl text-bg-tertiary/80 font-medium max-w-md">
+          <p className="text-sm md:text-xl text-text-secondary font-medium max-w-md">
             A clean, privacy-first chat app for everyone.
           </p>
 
@@ -30,10 +35,10 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
           <ul className="hidden md:flex flex-col gap-4 mt-10">
             {highlights.map((h) => (
               <li key={h.label} className="flex items-center gap-3">
-                <span className="w-10 h-10 rounded-lg bg-bg-tertiary/15 flex items-center justify-center text-lg">
+                <span className="w-10 h-10 rounded-lg bg-accent-subtle flex items-center justify-center text-lg">
                   {h.icon}
                 </span>
-                <span className="text-bg-tertiary/90 font-medium">{h.label}</span>
+                <span className="text-text-primary font-medium">{h.label}</span>
               </li>
             ))}
           </ul>
