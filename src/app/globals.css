@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ── Google Fonts ─────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans+Mono:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,100..900;1,100..900&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Noto+Sans+Thai:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 /* ── Design tokens — dark mode (default) ─────────────────── */
 :root {
@@ -80,7 +80,7 @@ html {
 }
 
 body {
-  font-family: 'Noto Sans', 'Noto Sans Thai', sans-serif;
+  font-family: 'DM Sans', 'Noto Sans Thai', sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.5;
@@ -90,7 +90,7 @@ body {
 
 /* Monospace */
 code, pre, kbd {
-  font-family: 'Noto Sans Mono', monospace;
+  font-family: 'DM Mono', monospace;
 }
 
 /* ── Theme transition (only during toggle, not on hover) ─── */
