@@ -45,35 +45,41 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
             <span
               className={[
                 "inline-block w-[3px] h-9 lg:h-11 bg-accent align-middle ml-0.5 -mb-0.5 rounded-sm",
-                typingDone ? "opacity-0 transition-opacity duration-500" : "animate-blink",
+                typingDone ? "opacity-0 transition-opacity duration-700" : "animate-blink",
               ].join(" ")}
             />
           </span>
 
-          {/* tagline fades in after typing */}
-          {typingDone && (
-            <p className="font-display italic mt-3 text-lg text-text-secondary max-w-sm leading-relaxed animate-fade-in">
-              A clean, privacy-first chat app for everyone.
-            </p>
-          )}
+          {/* tagline — always rendered, fades in after typing */}
+          <p
+            className="font-display italic mt-3 text-lg text-text-secondary max-w-sm leading-relaxed transition-all duration-700 ease-out"
+            style={{
+              opacity: typingDone ? 1 : 0,
+              transform: typingDone ? "translateY(0)" : "translateY(8px)",
+            }}
+          >
+            A clean, privacy-first chat app for everyone.
+          </p>
 
-          {/* feature list — staggered slide-in */}
-          {typingDone && (
-            <ul className="flex flex-col gap-3 mt-10">
-              {highlights.map((h, i) => (
-                <li
-                  key={h.label}
-                  className="flex items-center gap-3 animate-slide-in-left"
-                  style={{ animationDelay: `${i * 120}ms`, animationFillMode: "both" }}
-                >
-                  <span className="w-9 h-9 rounded-lg bg-accent-subtle flex items-center justify-center text-base shrink-0">
-                    {h.icon}
-                  </span>
-                  <span className="text-sm text-text-secondary">{h.label}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+          {/* feature list — always rendered, staggered transitions */}
+          <ul className="flex flex-col gap-3 mt-10">
+            {highlights.map((h, i) => (
+              <li
+                key={h.label}
+                className="flex items-center gap-3 transition-all duration-500 ease-out"
+                style={{
+                  opacity: typingDone ? 1 : 0,
+                  transform: typingDone ? "translateX(0)" : "translateX(-10px)",
+                  transitionDelay: typingDone ? `${i * 120}ms` : "0ms",
+                }}
+              >
+                <span className="w-9 h-9 rounded-lg bg-accent-subtle flex items-center justify-center text-base shrink-0">
+                  {h.icon}
+                </span>
+                <span className="text-sm text-text-secondary">{h.label}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </aside>
 
