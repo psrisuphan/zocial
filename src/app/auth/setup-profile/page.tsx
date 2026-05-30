@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
-import { Button, Input, Textarea, Card, useToast } from "@/components/ui";
+import { Button, Input, Textarea, Card, ThemeToggle, useToast } from "@/components/ui";
 
 export default function SetupProfile() {
   const [username, setUsername] = useState("");
@@ -68,25 +68,36 @@ export default function SetupProfile() {
   };
 
   return (
-    <Card>
-      <h1 className="text-xl font-bold text-text-primary mb-1">Set Up Profile</h1>
-      <p className="text-sm text-text-muted mb-6">Create your Zocial identity</p>
+    <div className="min-h-screen flex flex-col bg-bg-primary">
+      <header className="flex justify-end p-3">
+        <ThemeToggle />
+      </header>
+      <div className="flex-1 flex items-center justify-center px-4 pb-12">
+        <div className="w-full max-w-sm">
+          <Card className="relative overflow-hidden">
+            {/* accent flourish */}
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-accent via-accent-hover to-accent-active" />
+            <div className="pointer-events-none absolute -top-16 -right-16 w-40 h-40 rounded-full bg-accent-subtle blur-2xl" />
 
-      <div className="flex justify-center mb-6">
-        <div
-          title="Avatar upload coming soon"
-          className="relative w-20 h-20 rounded-full bg-bg-surface border-2 border-dashed border-border flex items-center justify-center cursor-pointer group hover:border-accent transition-colors"
-        >
-          <span className="text-2xl text-text-muted group-hover:text-accent transition-colors select-none">
-            +
-          </span>
-          <span className="absolute -bottom-5 text-xs text-text-muted whitespace-nowrap">
-            Add photo (soon)
-          </span>
-        </div>
-      </div>
+            <div className="relative">
+              <h1 className="text-xl font-bold text-text-primary mb-1">Set Up Profile</h1>
+              <p className="text-sm text-text-muted mb-6">Create your Zocial identity</p>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
+              <div className="flex justify-center mb-8">
+                <div
+                  title="Avatar upload coming soon"
+                  className="relative w-20 h-20 rounded-full bg-bg-surface ring-2 ring-accent/30 border-2 border-dashed border-accent/40 flex items-center justify-center cursor-pointer group hover:border-accent hover:ring-accent/50 transition-all"
+                >
+                  <span className="text-2xl text-accent/70 group-hover:text-accent transition-colors select-none">
+                    +
+                  </span>
+                  <span className="absolute -bottom-5 text-xs text-text-muted whitespace-nowrap">
+                    Add photo (soon)
+                  </span>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
         <Input
           label="Username"
           type="text"
@@ -135,6 +146,10 @@ export default function SetupProfile() {
           Continue
         </Button>
       </form>
-    </Card>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }
