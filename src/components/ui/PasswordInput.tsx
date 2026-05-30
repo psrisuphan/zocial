@@ -16,21 +16,14 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
 
     return (
       <div className="flex flex-col gap-1.5">
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="text-xs font-semibold uppercase tracking-wide text-text-secondary"
-          >
-            {label}
-          </label>
-        )}
         <div className="relative">
           <input
             ref={ref}
             id={inputId}
             type={show ? "text" : "password"}
+            placeholder=" "
             className={clsx(
-              "w-full px-3 py-2 pr-16 rounded bg-bg-tertiary border text-text-primary text-sm placeholder:text-text-muted transition-colors",
+              "peer w-full px-3 pt-5 pb-2 pr-16 rounded bg-bg-tertiary border text-text-primary text-sm placeholder-transparent transition-colors",
               "focus:outline-none focus:border-accent",
               error
                 ? "border-status-error"
@@ -39,6 +32,19 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             )}
             {...props}
           />
+          {label && (
+            <label
+              htmlFor={inputId}
+              className={clsx(
+                "absolute left-3 top-3.5 text-sm text-text-muted pointer-events-none select-none transition-all duration-150",
+                "peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-accent",
+                "peer-[&:not(:placeholder-shown)]:top-1.5 peer-[&:not(:placeholder-shown)]:text-xs",
+                error && "peer-[&:not(:placeholder-shown)]:text-status-error peer-focus:text-status-error"
+              )}
+            >
+              {label}
+            </label>
+          )}
           <button
             type="button"
             tabIndex={-1}
