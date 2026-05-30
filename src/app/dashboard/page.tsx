@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { Avatar, Button, Spinner, ThemeToggle, useToast } from "@/components/ui";
 import { User } from "@/types";
@@ -11,7 +11,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
   const toast = useToast();
 
   useEffect(() => {
@@ -29,7 +28,7 @@ export default function Dashboard() {
       setLoading(false);
     };
     getUser();
-  }, [router, supabase]);
+  }, [router]);
 
   const handleLogout = async () => {
     setLoggingOut(true);

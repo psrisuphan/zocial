@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { getAuthError } from "@/lib/authErrors";
 import { useRouter } from "next/navigation";
 import { Button, Input, Textarea, Card, ThemeToggle, useToast } from "@/components/ui";
@@ -14,7 +14,6 @@ export default function SetupProfile() {
   const [error, setError] = useState<string | null>(null);
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const router = useRouter();
-  const supabase = createClient();
   const toast = useToast();
 
   const checkUsername = async (value: string) => {

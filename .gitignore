@@ -15,6 +15,9 @@ build/
 # Next.js auto-generated files
 next-env.d.ts
 
+# TypeScript incremental build info
+*.tsbuildinfo
+
 # Environment
 .env
 .env.local
