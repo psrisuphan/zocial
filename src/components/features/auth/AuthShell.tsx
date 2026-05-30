@@ -17,10 +17,10 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
 
         <div className="relative">
           {/* wordmark */}
-          <span className="text-4xl lg:text-5xl font-bold tracking-tight text-accent">
+          <span className="font-display text-4xl lg:text-5xl font-bold tracking-tight text-accent">
             Zocial
           </span>
-          <p className="mt-3 text-lg text-text-secondary max-w-sm leading-relaxed">
+          <p className="font-display mt-3 text-lg italic text-text-secondary max-w-sm leading-relaxed">
             A clean, privacy-first chat app for everyone.
           </p>
 

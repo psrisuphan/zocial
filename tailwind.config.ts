@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         sans: ["'Noto Sans'", "'Noto Sans Thai'", "sans-serif"],
         mono: ["'Noto Sans Mono'", "monospace"],
+        display: ["'Playfair Display'", "Georgia", "serif"],
       },
       colors: {
         bg: {
