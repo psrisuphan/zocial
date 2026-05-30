@@ -18,6 +18,7 @@ export default function SetupProfile() {
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [usernameTaken, setUsernameTaken] = useState(false);
   const [checkingUsername, setCheckingUsername] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState(false);
   const router = useRouter();
   const toast = useToast();
   const { refreshProfile } = useAuth();
@@ -26,6 +27,7 @@ export default function SetupProfile() {
   const handleUsernameChange = (value: string) => {
     setUsername(value);
     setUsernameTaken(false);
+    setUsernameAvailable(false);
     if (!value) {
       setUsernameError(null);
       return;
@@ -55,6 +57,7 @@ export default function SetupProfile() {
         .maybeSingle();
       if (ignore) return;
       setUsernameTaken(!!data);
+      setUsernameAvailable(!data);
       setCheckingUsername(false);
     }, 350);
 
@@ -145,8 +148,15 @@ export default function SetupProfile() {
                   value={username}
                   onChange={(e) => handleUsernameChange(e.target.value)}
                   placeholder="johndoe"
-                  hint={checkingUsername ? "Checking availability…" : "How others will find and add you"}
+                  hint={
+                    checkingUsername
+                      ? "Checking availability…"
+                      : usernameAvailable
+                      ? `✓ Others will find you at @${username.toLowerCase()}`
+                      : "How others will find and add you"
+                  }
                   error={usernameMessage}
+                  success={usernameAvailable}
                   required
                 />
                 <Input

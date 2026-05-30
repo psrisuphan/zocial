@@ -6,10 +6,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   hint?: string;
+  success?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, hint, className, id, ...props }, ref) => {
+  ({ label, error, hint, success, className, id, ...props }, ref) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
 
     return (
@@ -24,6 +25,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               "focus:outline-none focus:border-accent",
               error
                 ? "border-status-error"
+                : success
+                ? "border-accent"
                 : "border-border hover:border-text-muted",
               className
             )}
@@ -39,7 +42,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <p className="text-xs text-status-error">{error}</p>
         )}
         {hint && !error && (
-          <p className="text-xs text-text-muted">{hint}</p>
+          <p className={clsx("text-xs", success ? "text-accent" : "text-text-muted")}>{hint}</p>
         )}
       </div>
     );
