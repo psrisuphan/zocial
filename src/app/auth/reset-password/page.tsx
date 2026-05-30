@@ -10,6 +10,7 @@ import {
   PasswordInput, PasswordRequirements,
   checkPassword, isPasswordValid,
 } from "@/components/ui";
+import { AuthShell } from "@/components/features/auth";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -52,6 +53,7 @@ export default function ResetPassword() {
 
   if (done) {
     return (
+      <AuthShell>
       <Card>
         <div className="text-center">
           <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-xl font-bold text-accent">
@@ -61,10 +63,12 @@ export default function ResetPassword() {
           <p className="text-sm text-text-muted">Redirecting you to the app...</p>
         </div>
       </Card>
+      </AuthShell>
     );
   }
 
   return (
+    <AuthShell>
     <Card>
       <h1 className="text-xl font-bold text-text-primary mb-1">Set New Password</h1>
       <p className="text-sm text-text-muted mb-6">Choose a strong new password.</p>
@@ -120,5 +124,6 @@ export default function ResetPassword() {
         </Link>
       </p>
     </Card>
+    </AuthShell>
   );
 }

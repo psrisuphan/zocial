@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { getAuthError } from "@/lib/authErrors";
 import Link from "next/link";
 import { Button, Input, Card } from "@/components/ui";
+import { AuthShell } from "@/components/features/auth";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -39,6 +40,7 @@ export default function ForgotPassword() {
 
   if (sent) {
     return (
+      <AuthShell>
       <Card>
         <div className="text-center">
           <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mx-auto mb-4 text-xl font-bold text-accent">
@@ -57,10 +59,12 @@ export default function ForgotPassword() {
           </Link>
         </div>
       </Card>
+      </AuthShell>
     );
   }
 
   return (
+    <AuthShell>
     <Card>
       <h1 className="text-xl font-bold text-text-primary mb-1">Forgot Password</h1>
       <p className="text-sm text-text-muted mb-6">
@@ -104,5 +108,6 @@ export default function ForgotPassword() {
         </Link>
       </p>
     </Card>
+    </AuthShell>
   );
 }

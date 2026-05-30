@@ -11,6 +11,7 @@ import {
   checkPassword, isPasswordValid,
   useToast,
 } from "@/components/ui";
+import { AuthShell } from "@/components/features/auth";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -51,6 +52,7 @@ export default function SignUp() {
   };
 
   return (
+    <AuthShell>
     <Card>
       <h1 className="text-xl font-bold text-text-primary mb-1">Create Account</h1>
       <p className="text-sm text-text-muted mb-6">Join Zocial to start chatting</p>
@@ -118,5 +120,6 @@ export default function SignUp() {
         </Link>
       </p>
     </Card>
+    </AuthShell>
   );
 }
