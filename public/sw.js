@@ -28,6 +28,11 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
+  // Only handle same-origin requests. Cross-origin calls (Supabase API,
+  // Google Fonts, etc.) go straight to the network and are never cached —
+  // caching API responses would serve stale auth/data.
+  if (new URL(event.request.url).origin !== self.location.origin) return;
+
   event.respondWith(
     caches.match(event.request).then((response) => {
       if (response) return response;
