@@ -63,9 +63,16 @@ export default function ForgotPassword() {
   return (
     <AuthShell>
     <div>
-      <h1 className="text-2xl font-bold text-text-primary mb-1">Forgot Password</h1>
+      <Link
+        href="/auth/login"
+        className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text-primary transition-colors mb-6"
+      >
+        ← Back
+      </Link>
+
+      <h1 className="text-2xl font-bold text-text-primary mb-1">Forgot your password?</h1>
       <p className="text-sm text-text-muted mb-6">
-        Enter your email and we&apos;ll send you a reset link.
+        Don&apos;t worry, enter your email and we&apos;ll send you a reset link.
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -97,13 +104,6 @@ export default function ForgotPassword() {
           Send Reset Link
         </Button>
       </form>
-
-      <p className="mt-5 text-center text-sm text-text-muted">
-        Remember your password?{" "}
-        <Link href="/auth/login" className="text-text-link hover:underline">
-          Log in
-        </Link>
-      </p>
     </div>
     </AuthShell>
   );
