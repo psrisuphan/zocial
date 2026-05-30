@@ -19,6 +19,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [emailTaken, setEmailTaken] = useState(false);
   const router = useRouter();
   const toast = useToast();
 
@@ -34,13 +35,33 @@ export default function SignUp() {
     if (!canSubmit) return;
     setLoading(true);
     setError(null);
+    setEmailTaken(false);
 
     try {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({ email, password });
+
       if (error) {
-        setError(getAuthError(error.message));
+        const msg = error.message.toLowerCase();
+        if (
+          msg.includes("already registered") ||
+          msg.includes("already exists") ||
+          msg.includes("user already")
+        ) {
+          setEmailTaken(true);
+        } else {
+          setError(getAuthError(error.message));
+        }
         return;
       }
+
+      // When email confirmations are ON, Supabase silently returns success for
+      // existing emails (to prevent enumeration). identities being empty is the
+      // reliable signal that the account already exists.
+      if (data.user?.identities?.length === 0) {
+        setEmailTaken(true);
+        return;
+      }
+
       toast.success("Account created! Set up your profile.");
       router.push("/auth/setup-profile");
     } catch {
@@ -63,7 +84,7 @@ export default function SignUp() {
           name="email"
           autoComplete="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => { setEmail(e.target.value); setEmailTaken(false); }}
           placeholder="you@example.com"
           required
         />
@@ -93,6 +114,18 @@ export default function SignUp() {
           error={confirmError}
           required
         />
+
+        {emailTaken && (
+          <p className="text-xs text-status-error bg-status-error/10 px-3 py-2 rounded">
+            An account with this email already exists.{" "}
+            <Link
+              href="/auth/login"
+              className="underline hover:text-accent transition-colors"
+            >
+              Sign in instead?
+            </Link>
+          </p>
+        )}
 
         {error && (
           <p className="text-xs text-status-error bg-status-error/10 px-3 py-2 rounded">
