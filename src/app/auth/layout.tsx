@@ -6,11 +6,13 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-primary px-4">
-      <div className="absolute top-3 right-3">
+    <div className="min-h-screen flex flex-col bg-bg-primary">
+      <header className="flex justify-end p-3">
         <ThemeToggle />
-      </div>
-      <div className="w-full max-w-sm">{children}</div>
+      </header>
+      <main className="flex-1 flex items-center justify-center px-4 pb-12">
+        <div className="w-full max-w-sm">{children}</div>
+      </main>
     </div>
   );
 }
