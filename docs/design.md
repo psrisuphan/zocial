@@ -237,11 +237,14 @@ Each phase lists its **Goal**, **What we build**, **How (key tasks)**, and **Acc
 - Deploy to Vercel; wire env vars to Supabase.
 
 **Acceptance criteria:**
-- [ ] Sign up with email/password; log in and out reliably.
-- [ ] Set a unique `@username` (duplicates rejected), display name, avatar.
-- [ ] App is **installable** to home screen on Android **and** iOS (manifest valid; "Add to Home Screen" launches standalone).
-- [ ] Light/dark toggle works and persists across sessions.
-- [ ] Reachable at a public HTTPS URL by anyone (not just LAN).
+- [x] Sign up with email/password; log in and out reliably. _(+ forgot/reset-password flows.)_
+- [~] Set a unique `@username` (duplicates rejected), display name, avatar. _(username + display name + bio done; **avatar upload pending** — currently a "soon" placeholder writing `avatar_url: null`.)_
+- [x] App is **installable** to home screen on Android **and** iOS (manifest valid; "Add to Home Screen" launches standalone). _(manifest + service worker + icons in place.)_
+- [x] Light/dark toggle works and persists across sessions.
+- [ ] Reachable at a public HTTPS URL by anyone (not just LAN). _(`vercel.json` configured; **actual deployment unconfirmed**.)_
+
+> **Status:** ~90% complete. Remaining: avatar upload + confirm/do Vercel deploy. See [`PROGRESS.md`](./PROGRESS.md) for the live resume-here tracker.
+> **Beyond original scope (done):** full auth UI redesign — split-screen `AuthShell`, typing/rotating animations, Playfair Display branding, animated gradients, welcome-page → redirect.
 
 ---
 
