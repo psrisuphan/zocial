@@ -48,6 +48,7 @@ const config: Config = {
         "fade-in":      "fadeIn 0.5s ease both",
         "fade-in-up":   "fadeInUp 0.5s ease both",
         "slide-in-left":"slideInLeft 0.4s ease both",
+        "gradient-shift": "gradientShift 8s ease infinite",
       },
       keyframes: {
         blink: {
@@ -65,6 +66,11 @@ const config: Config = {
         slideInLeft: {
           from: { opacity: "0", transform: "translateX(-10px)" },
           to:   { opacity: "1", transform: "translateX(0)" },
+        },
+        gradientShift: {
+          "0%":   { backgroundPosition: "0% 50%" },
+          "50%":  { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
         },
       },
       borderRadius: {

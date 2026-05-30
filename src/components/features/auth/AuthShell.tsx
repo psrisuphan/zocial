@@ -31,9 +31,21 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-bg-primary">
+    <div
+      className="min-h-screen flex flex-col md:flex-row animate-gradient-shift"
+      style={{
+        backgroundImage: "linear-gradient(-45deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%)",
+        backgroundSize: "200% 200%",
+      }}
+    >
       {/* ── Brand panel ─────────────────────────────────────── */}
-      <aside className="relative hidden md:flex md:w-1/2 lg:w-3/5 flex-col justify-center overflow-hidden bg-bg-secondary px-12 lg:px-20">
+      <aside
+        className="relative hidden md:flex md:w-1/2 lg:w-3/5 flex-col justify-center overflow-hidden px-12 lg:px-20 animate-gradient-shift"
+        style={{
+          backgroundImage: "linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 50%, var(--bg-secondary) 100%)",
+          backgroundSize: "200% 200%",
+        }}
+      >
         {/* subtle accent glow */}
         <div className="pointer-events-none absolute -top-40 -left-40 w-96 h-96 rounded-full bg-accent opacity-[0.06] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-accent opacity-[0.04] blur-3xl" />
