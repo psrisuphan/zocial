@@ -206,6 +206,9 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
         {/* noise grain */}
         <div className="noise pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay" />
 
+        {/* accent glow */}
+        <div className="pointer-events-none absolute -bottom-32 -right-32 w-80 h-80 rounded-full bg-accent opacity-[0.05] blur-3xl" />
+
         <header className="flex items-center justify-between px-4 py-3">
           <span className="md:hidden text-lg font-bold text-accent font-display">{WORDMARK}</span>
           <div className="ml-auto">
